@@ -22,7 +22,7 @@ def marvelcharcall(stampystamp, hashyhash, pkeyz, lookmeup):
     print(XAVIER+"?name="+lookmeup+"&ts="+stampystamp+"&apikey="+pkeyz+"&hash="+hashyhash)
     return r.json()
 
-    
+# main function    
 def main():
     
     ## harvest private key
