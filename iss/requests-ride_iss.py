@@ -6,7 +6,7 @@ import requests
 
 ## Define URL
 MAJORTOM = 'http://api.open-notify.org/astros.json'
-
+# function
 def main():
 
     ## Call the webservice
