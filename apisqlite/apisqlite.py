@@ -46,11 +46,6 @@ def harvestkey():
 
 def printlocaldb():
     pass
-    #cursor = conn.execute("SELECT * from MOVIES")
-    #for row in cursor:
-    #    print("MOVIE = ", row[0])
-    #    print("YEAR = ", row[1])
-
 
 def main():
 
@@ -77,9 +72,10 @@ def main():
 
         if answer == "1":
             searchstring = input("Search all movies in the OMDB. Enter search string: ")
-            resp = movielookup(mykey, searchstring)["Search"]
+            resp = movielookup(mykey, searchstring)#["Search"]
             if resp:
                 # display the results
+                resp = resp.get("Search")
                 print(resp)
                 # write the results into the database
                 trackmeplease(resp)
