@@ -8,13 +8,14 @@ import sqlite3
 import requests
 
 # Define the base URL
-OMDBURL = "http://www.omdbapi.com/?i=tt3896198&apikey=aaa932c1"
+OMDBURL = "http://www.omdbapi.com/"
+
 
 # search for all movies containing string
 def movielookup(mykey, searchstring):
     try:
         ## open URL to return 200 response
-        resp = requests.get(f"{OMDBURL}apikey={mykey}&s={searchstring}")
+        resp = requests.get(f"{OMDBURL}?apikey={mykey}&s={searchstring}")
         ## read the file-like object decode JSON to Python data structure
         return resp.json()
     except:
@@ -41,11 +42,16 @@ def trackmeplease(datatotrack):
 
 # Read in API key for OMDB
 def harvestkey():
-    with open("/Users/prodigalson/omdb.key") as apikeyfile:
+    with open("/home/student/omdb.key") as apikeyfile:
         return apikeyfile.read().rstrip("\n") # grab the api key out of omdb.key
 
 def printlocaldb():
     pass
+    #cursor = conn.execute("SELECT * from MOVIES")
+    #for row in cursor:
+    #    print("MOVIE = ", row[0])
+    #    print("YEAR = ", row[1])
+
 
 def main():
 
@@ -64,8 +70,9 @@ def main():
             ** Returned data will be written into the local database **
             1) Search for All Movies Containing String
             2) Search for All Movies By Type
-            3) Search for All Movies By Year of Release
-            4) Search for All Movies By Type and Year of Release
+            3) Search for All Movies By Year Released
+            4) Search for All Movies By Type And Year Released
+            5) Show All Movies
             99) Exit""")
 
             answer = input("> ")
@@ -74,37 +81,42 @@ def main():
             searchstring = input("Search all movies in the OMDB. Enter search string: ")
             resp = movielookup(mykey, searchstring)#["Search"]
             if resp:
-                # display the results
                 resp = resp.get("Search")
+                # display the results
                 print(resp)
                 # write the results into the database
                 trackmeplease(resp)
-            else:
-                print("That search did not return any results.")
-
         if answer == "2":
             searchstring = input("Search all movies in the OMDB. Enter type: ")
-            resp = movielookup(mykey, searchstring)["Search"]
+            resp = movielookup(mykey, searchstring)
             if resp:
+                resp = resp.get("Type")
                 # display the results
                 print(resp)
                 # write the results into the database
                 trackmeplease(resp)
-            else:
-                print("That search did not return any results.")
 
         if answer == "3":
             searchstring = input("Search all movies in the OMDB. Enter the year of release: ")
-            resp = movielookup(mykey, searchstring)["Search"]
+            resp = movielookup(mykey, searchstring)
             if resp:
+                resp = resp.get("Year")
                 # display the results
                 print(resp)
                 # write the results into the database
                 trackmeplease(resp)
-            else:
-                print("That search did not return any results.")
-            
+
         if answer == "4":
+            searchstring = input("Search all movies in the OMDB. Enter the year of release: ")
+            resp = movielookup(mykey, searchstring)["Type", "Year"]
+            if resp:
+                resp = movielookup(mykey, searchstring)
+                # display the results
+                print(resp)
+                trackmeplease(resp)
+
+
+        if answer == "5":
             searchstring = input("Search all movies in the OMDB. Enter type and the year of release: ")
             resp = movielookup(mykey, searchstring)["Search"]
             if resp:
@@ -112,12 +124,13 @@ def main():
                 print(resp)
                 # write the results into the database
                 trackmeplease(resp)
+
             else:
                 print("That search did not return any results.")
 
-
         elif answer == "99":
             print("See you next time!")
+
             break
 
 if __name__ == "__main__":
